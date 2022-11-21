@@ -7,5 +7,5 @@ module.exports = function(server){
 
     //payment cycle routes
     const BillingCycle = require('../api/billingCycle/billingCycleService')
-    BillingCycle.register(router, '/BillingCycles')
+    BillingCycle.register(router, '/billingCycles')
 }
