@@ -1,4 +1,4 @@
-const _ = require('loadash')
+const _ = require('lodash')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('./user')
@@ -14,7 +14,7 @@ const sendErrorsFromDB = (res, dbErrors) => {
     return res.status(400).json({errors})
 }
 
-const login =(req,res,next) => {
+const login =(req,res,next) => {    
     const email = req.body.email || ''
     const password = req.body.password || ''
     
