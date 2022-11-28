@@ -41,3 +41,48 @@ const validateToken = (req, res, next) => {
     })
 }
 
+const signUp = (res,req, next) => {
+    const name = res.body.name || ''
+    const email = res.body.email || ''
+    const password = res.body.password || ''
+    const confirmPassword = res.body.confirm_password || ''
+
+    if(!email.match(emailRegex)) {
+        return res.status(400).send({errors: ['O Email informado está inválido']})
+    }
+
+
+    if(!password.match(passwordRegex)) {
+        return res.status(400).send({
+            errors: [
+                'a Senha precisa ter: uma letra maiúscula, uma letra minúscula,um numero, uma caractere especial '
+            ]
+        })
+    }
+
+    const salt = bcrypt.genSaltSync()
+    const passwordHash = bcrypt.hashSync(password,salt)
+        if(!bcrypt.compareSync(confirmPassword, passwordHash)) {
+            return res.status(400).send({error:['Senhas não confere']})
+        }
+
+        user.findOne({email}, (err,user) =>{
+            if(err) {
+                return sendErrorsFromDB(res,err)
+            }else if(user){
+                return res.status(400).send({error:['Usuário já Cadastrado']})
+            }else{
+                const newUser = new User({name,email,password: passwordHash})
+                newUser.save(err =>{
+                    if(err){
+                        return sendErrorsFromDB(res,err)
+                    }else {
+                        login(res,req,next)
+                    }
+                })
+            }
+        })
+}
+
+module.exports = {login,signUp,validateToken}
+
